@@ -17,7 +17,6 @@ const options = {
             face: 'Consolas',
             vadjust: 0,
             size: 14,
-            weight: 'bold',
             multi: true,
             color: '#000000',
             align: 'center'
@@ -65,7 +64,6 @@ const network = new vis.Network(container, data, options);
 var newNodeList = [];
 var newEdgeList = [];
 function draw(){
-
     const inputForm = document.getElementById('inputform');
     const edges_input = inputForm.getElementsByClassName('edge');
 
@@ -94,14 +92,22 @@ function draw(){
             }
         }
         
-        const node1 = {name: source1, h: h1};
-        const node2 = {name: source2, h: h2};
+        const node1 = {name: source1, h: parseInt(h1)};
+        const node2 = {name: source2, h: parseInt(h2)};
 
         if(!newNodeList.find(node => node1.name === node.name))
             newNodeList.push(node1);
+        else {
+            const index = newNodeList.findIndex(newNode => newNode.name === node1.name);
+            newNodeList[index] = node1;
+        }
 
         if(!newNodeList.find(node => node2.name === node.name))
             newNodeList.push(node2);
+        else {
+            const index = newNodeList.findIndex(newNode => newNode.name === node2.name);
+            newNodeList[index] = node2;
+        }
 
         const newEdge = {u: source1, v: source2, w: weight};
         if(!newEdgeList.find(edge => (newEdge.u == edge.u && newEdge.v == edge.v) || (newEdge.v == edge.u && newEdge.u == edge.v)))
@@ -118,6 +124,10 @@ function draw(){
 
 function createNode(name, h){
     return {id: nodes.length + 1, label: `${name}${h != -1 ? `\n${h}` : ''}`, name: name, h: h};
+}
+
+function upateNode(node){
+    return {id: getNode(node.name).id, label: `${node.name}${node.h != -1 ? `\n${node.h}` : ''}`, h: node.h}
 }
 
 function getNode(name){
@@ -153,7 +163,7 @@ function createEdge(u, v, w){
 function addNode(newNode){
     if(getNode(newNode.name) == null){
         nodes.add(createNode(newNode.name, newNode.h))
-    }
+    } else nodes.update(upateNode(newNode));
 }
 
 function addEdge(edge){

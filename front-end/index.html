@@ -101,7 +101,7 @@
 <script src="struct_framework.js"></script>
 <script>
 
-    var map = {};
+    var map = null;
 
     function addEdgeInput() {
         const inputform = document.querySelector('#inputform');
@@ -211,7 +211,7 @@
     }
 
     function updateSelects() {
-        if(map != {}){
+        if(map != null){
             let nodes = [];
             for(var i = 1; i <= map.nodelist.length; i++){
                 nodes.push(map.nodelist.get(i).name);
@@ -258,7 +258,31 @@
                 hList.appendChild(titleDiv);
 
                 container.insertBefore(hList, inputContainer.nextSibling);
-            }    
+            }
+
+            if(map != null && map.nodelist.get(1).h){
+                const nodeList = map.nodelist.get().map(node => node.name);
+
+                const childElements = document.getElementById("h-list").getElementsByTagName("*");
+                const h_ids = Array.from(childElements)
+                                .filter(element => element.id) 
+                                .map(element => element.id); 
+
+                nodeList.forEach(nodeName => {
+
+                    if(h_ids.includes(`h-${nodeName}`)) return;
+                    
+                    document.querySelector('#h-list').insertAdjacentHTML('beforeend', `
+                        <div class="h">
+                            <p class="title" styles="margin:0px">${nodeName}</p>
+                            <input class="input" type="number" id="h-${nodeName}">
+                        </div>
+                    `);
+                    existingNodes.push(nodeName);
+                });
+            }
+
+
         } else {
             const hList = document.querySelector('#h-list');
             if(hList) {
