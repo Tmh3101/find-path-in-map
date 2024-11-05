@@ -17,8 +17,9 @@ const options = {
             face: 'Consolas',
             vadjust: 0,
             size: 14,
+            weight: 'bold',
             multi: true,
-            color: '#212529',
+            color: '#000000',
             align: 'center'
         },
         margin: {
@@ -31,12 +32,12 @@ const options = {
     edges: {
         font: {
             face: 'Consolas',
-            color: '#212529',
+            color: '#000000',
             size: 14,
             align: 'horizontal'
         },
         color: {
-            color: '#848484',
+            color: '#333',
         },
         width: 2
     },
