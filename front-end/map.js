@@ -73,45 +73,49 @@ function draw(){
         const source1 = edge.querySelector('input[name="node1"]').value;
         const source2 = edge.querySelector('input[name="node2"]').value;
         const weight = edge.querySelector('input[name="weight"]').value;
-
-        if([source1, source2, weight].includes('')){
-            alert('Nhap cung khong hop le');
-            return null;
-        }
         
         let h1 = 0, h2 = 0;
         if(document.querySelector('input[name="number-selector"]:checked').value == 1) {
             h1 = -1;
             h2 = -1;
         } else {
-            h1 = document.querySelector(`#h-${source1}`).value;
-            h2 = document.querySelector(`#h-${source2}`).value;
+            h1 = document.querySelector(`#h-${source1}`) == null ? -2 : document.querySelector(`#h-${source1}`).value;
+            h2 = document.querySelector(`#h-${source2}`) == null ? -2 : document.querySelector(`#h-${source2}`).value;
             if(h1 == '' || h2 == ''){
                 alert('Nhap heuristic khong hop le');
                 return null;
             }
         }
         
-        const node1 = {name: source1, h: parseInt(h1)};
-        const node2 = {name: source2, h: parseInt(h2)};
-
-        if(!newNodeList.find(node => node1.name === node.name))
-            newNodeList.push(node1);
-        else {
-            const index = newNodeList.findIndex(newNode => newNode.name === node1.name);
-            newNodeList[index] = node1;
+        if(source1 && h1 != -2){
+            const node1 = {name: source1, h: parseInt(h1)};
+            if(!newNodeList.find(node => node1.name === node.name))
+                newNodeList.push(node1);
+            else {
+                const index = newNodeList.findIndex(newNode => newNode.name === node1.name);
+                newNodeList[index] = node1;
+            }
         }
 
-        if(!newNodeList.find(node => node2.name === node.name))
-            newNodeList.push(node2);
-        else {
-            const index = newNodeList.findIndex(newNode => newNode.name === node2.name);
-            newNodeList[index] = node2;
+        if(source2 && h2 != -2){
+            const node2 = {name: source2, h: parseInt(h2)};
+            if(!newNodeList.find(node => node2.name === node.name))
+                newNodeList.push(node2);
+            else {
+                const index = newNodeList.findIndex(newNode => newNode.name === node2.name);
+                newNodeList[index] = node2;
+            }
         }
 
-        const newEdge = {u: source1, v: source2, w: weight};
-        if(!newEdgeList.find(edge => (newEdge.u == edge.u && newEdge.v == edge.v) || (newEdge.v == edge.u && newEdge.u == edge.v)))
-            newEdgeList.push(newEdge);
+        console.log(source1, source2, weight);
+        if(source1 != '' && source2 != '' && weight == ''){
+            alert('Nhap cung khong hop le');
+            return null;
+        } else if (![source1, source2, weight].includes('')) {
+            const newEdge = {u: source1, v: source2, w: weight};
+            if(!newEdgeList.find(edge => (newEdge.u == edge.u && newEdge.v == edge.v) || (newEdge.v == edge.u && newEdge.u == edge.v)))
+                newEdgeList.push(newEdge);
+        }
 
     }
 
