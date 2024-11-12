@@ -52,11 +52,14 @@
                     <div class="title">From</div>
                     <div class="title">To</div>
                     <div class="title">Cost</div>
+                    <div class="title"></div>
                 </div>
+
                 <div class="edge">
-                    <input autocomplete="off" class="input" type="text" name="node1" placeholder="u" onblur="updateHueristicInput(this)">
-                    <input autocomplete="off" class="input" type="text" name="node2" placeholder="v" onblur="updateHueristicInput(this)">
+                    <input autocomplete="off" class="input node1" type="text" name="node1" placeholder="u" onblur="updateHueristicInput(this)">
+                    <input autocomplete="off" class="input node2" type="text" name="node2" placeholder="v" onblur="updateHueristicInput(this)">
                     <input autocomplete="off" class="input" type="number" name="weight" placeholder="w">
+                    <button class="delete-edge-btn" onclick="deleteEdge(this)">-</button>
                 </div>
             </div>
             <button class="add-edge-btn" onclick="addEdgeInput()">+</button>
@@ -79,13 +82,13 @@
         <div id="network-container">
             <div id="network"></div>
             <div id="res" class="input-container">
-                <div id="traversalOrder" class="title">
+                <div id="traversalOrder" class="title res-title">
                     Traversal Order:
                 </div>
-                <div id="pathToGoal" class="title">
+                <div id="pathToGoal" class="title res-title">
                     Path To Goal:
                 </div>
-                <div id="totalCost" class="title">
+                <div id="totalCost" class="title res-title">
                     Total Cost:
                 </div>
             </div>
@@ -108,9 +111,10 @@
 
         inputform.insertAdjacentHTML('beforeend', `
             <div class="edge">
-                <input autocomplete="off" class="input" type="text" name="node1" placeholder="u" onblur="updateHueristicInput(this)">
-                <input autocomplete="off" class="input" type="text" name="node2" placeholder="v" onblur="updateHueristicInput(this)">
+                <input autocomplete="off" class="input node1" type="text" name="node1" placeholder="u" onblur="updateHueristicInput(this)">
+                <input autocomplete="off" class="input node2" type="text" name="node2" placeholder="v" onblur="updateHueristicInput(this)">
                 <input autocomplete="off" class="input" type="number" name="weight" placeholder="w">
+                <button class="delete-edge-btn" onclick="deleteEdge(this)">-</button>
             </div>
         `);
     }
@@ -304,6 +308,22 @@
         }
     }
 
+    function deleteEdge(button) {
+        const edge = button.parentElement;
+
+        const u = edge.querySelector('.node1').value;
+        const v = edge.querySelector('.node2').value;
+
+        console.log(u);
+        console.log(v);
+        
+        if (document.querySelectorAll('.edge').length > 0) {
+            edge.remove();
+            deleteNode(u);
+            deleteNode(v);
+            draw();
+        }
+    }
 
 </script>
 

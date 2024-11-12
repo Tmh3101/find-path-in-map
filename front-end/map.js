@@ -127,7 +127,12 @@ function draw(){
 }
 
 function createNode(name, h){
-    return {id: nodes.length + 1, label: `${name}${h != -1 ? `\n${h}` : ''}`, name: name, h: h};
+    let newNodeId = 1;
+    const allNodes = nodes.get();
+    if(allNodes.length > 0)
+        newNodeId = allNodes[allNodes.length - 1].id + 1;
+
+    return {id: newNodeId, label: `${name}${h != -1 ? `\n${h}` : ''}`, name: name, h: h};
 }
 
 function upateNode(node){
@@ -149,19 +154,24 @@ function getEdge(node1_name, node2_name){
     const idNode1 = getNode(node1_name).id;
     const idNode2 = getNode(node2_name).id;
 
-    for(let i = 0; i < edges.length; i++){
-        const edge = edges.get(i + 1);
-        if(edge.from == idNode1 && edge.to == idNode2)
-            return edge;
-        if(edge.from == idNode2 && edge.to == idNode1)
-            return edge;
-    }
+    let res = null;
 
-    return null;
+    edges.get().forEach(edge => {
+        if(edge.from == idNode1 && edge.to == idNode2)
+            res = edge;
+        if(edge.from == idNode2 && edge.to == idNode1)
+            res = edge;
+    });
+
+    return res;
 }
 
 function createEdge(u, v, w){
-    return {from: getNode(u).id, to: getNode(v).id, label: w, id: edges.length + 1}
+    let newEdgeId = 1;
+    const allEdges = edges.get();
+    if(allEdges.length > 0)
+        newEdgeId = allEdges[allEdges.length - 1].id + 1;
+    return {from: getNode(u).id, to: getNode(v).id, label: w, id: newEdgeId}
 }
 
 function addNode(newNode){
@@ -254,4 +264,50 @@ function getNodeNameById(id){
     });
 
     return res;
+}
+
+function deleteNode(nodeName){
+    const inputForm = document.getElementById('inputform');
+    const edges_input = inputForm.getElementsByClassName('edge');
+    let sourceList = [];
+
+    for (let i = 0; i < edges_input.length; i++) {
+        const edge = edges_input[i];
+        const source1 = edge.querySelector('input[name="node1"]').value;
+        const source2 = edge.querySelector('input[name="node2"]').value;
+        sourceList.push(source1);
+        sourceList.push(source2);
+    }
+
+    if(sourceList.includes(nodeName)) return;
+    
+    const node = getNode(nodeName);
+    if(node != null){
+        nodes.remove(node.id);
+        newNodeList = newNodeList.filter(newNode => newNode.name != nodeName);
+        deleteEdgesFrom(node.id);
+    }
+}
+
+
+function deleteEdgesFrom(nodeId) {
+    const edgeListTmp = edges.get();
+    edgeListTmp.forEach(edge => {
+        if(edge.from == nodeId || edge.to == nodeId) { 
+            const nodeNameFrom = getNodeNameById(edge.from);
+            const nodeNameTo = getNodeNameById(edge.to);
+            
+            // Kiểm tra nếu tên node không rỗng trước khi ghi log
+            if (nodeNameFrom && nodeNameTo) {
+                console.log('remove:', nodeNameFrom + ' ' + nodeNameTo);
+            }
+                       
+            edges.remove(edge.id);
+            // Cập nhật newEdgeList để xóa tất cả các edge liên quan đến nodeId
+            newEdgeList = newEdgeList.filter(newEdge => 
+                newEdge.u != nodeNameFrom && newEdge.v != nodeNameTo &&
+                newEdge.u != nodeNameTo && newEdge.v != nodeNameFrom
+            );
+        }
+    });
 }
