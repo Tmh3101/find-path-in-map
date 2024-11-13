@@ -107,7 +107,6 @@ function draw(){
             }
         }
 
-        console.log(source1, source2, weight);
         if(source1 != '' && source2 != '' && weight == ''){
             alert('Nhap cung khong hop le');
             return null;
@@ -296,11 +295,6 @@ function deleteEdgesFrom(nodeId) {
         if(edge.from == nodeId || edge.to == nodeId) { 
             const nodeNameFrom = getNodeNameById(edge.from);
             const nodeNameTo = getNodeNameById(edge.to);
-            
-            // Kiểm tra nếu tên node không rỗng trước khi ghi log
-            if (nodeNameFrom && nodeNameTo) {
-                console.log('remove:', nodeNameFrom + ' ' + nodeNameTo);
-            }
                        
             edges.remove(edge.id);
             // Cập nhật newEdgeList để xóa tất cả các edge liên quan đến nodeId
